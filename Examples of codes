@@ -1,0 +1,169 @@
+# 📁 python-data-tools-cleancodehub
+
+"""
+A curated collection of Python scripts for automating tasks, analyzing data, filtering input,
+and solving real-world problems.
+
+Organized by use-case categories. Each script includes docstrings and usage examples.
+"""
+
+# === 📊 Data Processing ===
+
+# sum_dicts.py
+def sum_dicts(*args) -> dict:
+    """Merge dictionaries and sum values by key."""
+    my_dict = {}
+    for arg in args:
+        for key, value in arg.items():
+            my_dict[key] = my_dict.get(key, 0) + value
+    return my_dict
+
+# product_list.py
+def product_list(numbers: list) -> list:
+    """Return list where each element is product of all others except itself."""
+    result_list = []
+    for i in range(len(numbers)):
+        product = 1
+        for j in range(len(numbers)):
+            if i != j:
+                product *= numbers[j]
+        result_list.append(product)
+    return result_list
+
+# get_leaders.py
+def get_leaders(numbers: list) -> list:
+    """Return elements that are greater than the sum of elements to their right."""
+    result_list = []
+    for num in range(len(numbers) - 1):
+        if numbers[num] > sum(numbers[num + 1:]):
+            result_list.append(numbers[num])
+            if numbers[-1] == 0:
+                return result_list
+    if numbers[-1] > 0:
+        result_list.append(numbers[-1])
+    return result_list
+
+# find_smaller_digits.py
+def find_smaller_digits(ls: list) -> list:
+    """Count how many numbers to the right are smaller for each element."""
+    result_list = []
+    for digit in range(len(ls)):
+        count = 0
+        for num in range(digit + 1, len(ls)):
+            if ls[num] < ls[digit]:
+                count += 1
+        result_list.append(count)
+    return result_list
+
+
+# === 🧹 Text & Validation Tools ===
+
+# disemvowel_text_filter.py
+def disemvowel_trolls(sentence: str) -> str:
+    """Remove all vowels from the input sentence."""
+    vowels = "AaEeIiOoUu"
+    return ''.join([char for char in sentence if char not in vowels])
+
+# extract_names.py
+def extract_names(message: str) -> list:
+    """Split and clean names from a comma-separated string."""
+    names = message.split(",")
+    return [" ".join(name.split()).strip() for name in names]
+
+# restore_names.py
+def restore_names(users: list) -> None:
+    """Restore missing 'first_name' from 'full_name' in user dicts."""
+    for user in users:
+        if "first_name" not in user and "full_name" in user:
+            first_name, *_ = user["full_name"].split(" ", 1)
+            user["first_name"] = first_name
+
+# color_stones.py
+def color_stones(stones: str) -> int:
+    """Count number of consecutive same-colored stones."""
+    return sum(stones[i] == stones[i-1] for i in range(1, len(stones)))
+
+# get_century.py
+def get_century(year: int) -> int:
+    """Return the century of a given year."""
+    return (year + 99) // 100
+
+# who_is_online.py
+def who_is_online(friends: list) -> dict:
+    """Group users into online, away, and offline based on status and activity."""
+    result = {"online": [], "away": [], "offline": []}
+    for friend in friends:
+        name = friend["username"]
+        if friend["status"] == "online":
+            if friend["lastActivity"] <= 10:
+                result["online"].append(name)
+            else:
+                result["away"].append(name)
+        else:
+            result["offline"].append(name)
+    return {k: v for k, v in result.items() if v}
+
+# get_order.py
+def get_order(order: str) -> str:
+    """Extract food items from a string and return them in menu order."""
+    menu = ["burger", "fries", "chicken", "pizza", "sandwich", "onionrings", "milkshake", "coke"]
+    items, i = [], 0
+    while i < len(order):
+        for word in menu:
+            if order.startswith(word, i):
+                items.append(word)
+                i += len(word)
+                break
+        else:
+            i += 1
+    return ' '.join(w.capitalize() for w in sorted(items, key=menu.index))
+
+# check_emails_against_blacklist.py
+def check_emails_against_blacklist(emails: list[str], blacklist: set) -> str:
+    """Return first email from list that appears in the blacklist."""
+    for email in emails:
+        if email in blacklist:
+            return email
+    return ""
+
+
+# === ⚙️ Utility Scripts ===
+
+# seating_arrangement.py
+def seating_arrangement(rows: int, seats_per_row: int) -> list[str]:
+    """Generate seating layout strings for given rows and seats."""
+    return [f"Row {row}: {', '.join(f'Seat {seat}' for seat in range(1, seats_per_row+1))}" for row in range(1, rows+1)]
+
+# count_matching_socks.py
+def count_matching_socks(colors: list) -> int:
+    """Count how many pairs of socks exist in the list."""
+    colors.sort()
+    pairs, i = 0, 0
+    while i < len(colors) - 1:
+        if colors[i] == colors[i + 1]:
+            pairs += 1
+            i += 2
+        else:
+            i += 1
+    return pairs
+
+# get_product_id.py
+def get_product_id(url: str) -> str:
+    """Extract the product ID (second to last token) from a hyphenated URL."""
+    return url.split("-")[-2]
+
+# detect_lowercase_words.py
+def detect_lowercase_words() -> None:
+    """Continuously read input and print words that are all lowercase."""
+    while True:
+        word = input("Enter a word: ")
+        if word == "exit":
+            break
+        if word.islower():
+            print(f"{word} detected")
+
+
+# === 🎮 Fun or Custom ===
+
+# food_order_parser.py  (already included as get_order)
+# email_blacklist_checker.py (alias of check_emails_against_blacklist)
